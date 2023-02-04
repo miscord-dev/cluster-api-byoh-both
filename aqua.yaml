@@ -1,0 +1,9 @@
+registries:
+- type: standard
+  ref: v3.127.0 # renovate: depName=aquaproj/aqua-registry
+
+packages:
+- name: kubernetes-sigs/kubebuilder@v3.9.0
+- name: kubernetes/kubectl
+  version: v1.26.1
+
