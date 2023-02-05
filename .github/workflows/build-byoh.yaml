@@ -22,5 +22,9 @@ jobs:
         run: |
           npx zx <<'EOF'
           const script = require('./.github/workflows/build-byoh.js')
-          console.log(script())
+          script().then(result => {
+            console.log(result)
+          }).catch(err => {
+            throw err
+          })
           EOF
