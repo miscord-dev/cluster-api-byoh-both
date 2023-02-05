@@ -15,4 +15,12 @@ resources:
   kind: BothInstallerConfigTemplate
   path: github.com/miscord-dev/cluster-api-byoh-both/api/v1alpha1
   version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: byoh.miscord.win
+  kind: BothInstallerConfig
+  path: github.com/miscord-dev/cluster-api-byoh-both/api/v1alpha1
+  version: v1alpha1
 version: "3"

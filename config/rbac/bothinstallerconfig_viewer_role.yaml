@@ -1,0 +1,27 @@
+# permissions for end users to view bothinstallerconfigs.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrole
+    app.kubernetes.io/instance: bothinstallerconfig-viewer-role
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: cluster-api-byoh-both
+    app.kubernetes.io/part-of: cluster-api-byoh-both
+    app.kubernetes.io/managed-by: kustomize
+  name: bothinstallerconfig-viewer-role
+rules:
+- apiGroups:
+  - byoh.miscord.win
+  resources:
+  - bothinstallerconfigs
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - byoh.miscord.win
+  resources:
+  - bothinstallerconfigs/status
+  verbs:
+  - get

@@ -32,6 +32,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
 	byohmiscordwinv1alpha1 "github.com/miscord-dev/cluster-api-byoh-both/api/v1alpha1"
+	"github.com/miscord-dev/cluster-api-byoh-both/controllers"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -88,6 +89,13 @@ func main() {
 		os.Exit(1)
 	}
 
+	if err = (&controllers.BothInstallerConfigReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "BothInstallerConfig")
+		os.Exit(1)
+	}
 	//+kubebuilder:scaffold:builder
 
 	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
