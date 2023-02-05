@@ -1,0 +1,25 @@
+name: Build images
+
+on:
+  pull_request:
+  tags:
+    - "v*.*.*"
+
+jobs:
+  docker:
+    strategy:
+      matrix:
+        arch: [amd64, arm64]
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+      - name: Build
+        env:
+          FORCE_COLOR: 3
+        run: |
+          npx zx <<'EOF'
+          const script = require('.github/workflows/build-byoh.js')
+          console.log(script())
+          EOF
