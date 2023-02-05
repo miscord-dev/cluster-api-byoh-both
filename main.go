@@ -33,6 +33,7 @@ import (
 
 	byohmiscordwinv1alpha1 "github.com/miscord-dev/cluster-api-byoh-both/api/v1alpha1"
 	"github.com/miscord-dev/cluster-api-byoh-both/controllers"
+	"github.com/miscord-dev/cluster-api-byoh-both/pkg/installer"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -90,8 +91,9 @@ func main() {
 	}
 
 	if err = (&controllers.BothInstallerConfigReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
+		Client:    mgr.GetClient(),
+		Scheme:    mgr.GetScheme(),
+		Installer: installer.New(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "BothInstallerConfig")
 		os.Exit(1)
