@@ -1,0 +1,31 @@
+# permissions for end users to edit bothinstallerconfigtemplates.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrole
+    app.kubernetes.io/instance: bothinstallerconfigtemplate-editor-role
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: cluster-api-byoh-both
+    app.kubernetes.io/part-of: cluster-api-byoh-both
+    app.kubernetes.io/managed-by: kustomize
+  name: bothinstallerconfigtemplate-editor-role
+rules:
+- apiGroups:
+  - byoh.miscord.win
+  resources:
+  - bothinstallerconfigtemplates
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - byoh.miscord.win
+  resources:
+  - bothinstallerconfigtemplates/status
+  verbs:
+  - get

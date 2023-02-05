@@ -7,4 +7,12 @@ layout:
 - go.kubebuilder.io/v3
 projectName: cluster-api-byoh-both
 repo: github.com/miscord-dev/cluster-api-byoh-both
+resources:
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: byoh.miscord.win
+  kind: BothInstallerConfigTemplate
+  path: github.com/miscord-dev/cluster-api-byoh-both/api/v1alpha1
+  version: v1alpha1
 version: "3"
