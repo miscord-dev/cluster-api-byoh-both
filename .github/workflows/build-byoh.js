@@ -16,7 +16,7 @@ host-agent-binaries-arm64: ## Builds the binaries for the host-agent
 \tHOST_AGENT_DIR=./\\$(HOST_AGENT_DIR) \\$(MAKE) host-agent-binary
 EOF`
     await $`cat ${byohDir}/Makefile`
-    await $`cd ${byohDir} && make host-agent-binaries-arm64`
+    await $`cd ${byohDir} && make host-agent-binaries-arm64 && cp bin/byoh-hostagent* ./_dist`
 
     await $`ls byoh/_dist`
 }
