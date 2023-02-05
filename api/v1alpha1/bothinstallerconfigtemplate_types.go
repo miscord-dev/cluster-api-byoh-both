@@ -28,8 +28,7 @@ type BothInstallerConfigTemplateSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	// Foo is an example field of BothInstallerConfigTemplate. Edit bothinstallerconfigtemplate_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	Template BothInstallerConfigTemplateResource `json:"template"`
 }
 
 // BothInstallerConfigTemplateStatus defines the observed state of BothInstallerConfigTemplate
@@ -57,6 +56,11 @@ type BothInstallerConfigTemplateList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []BothInstallerConfigTemplate `json:"items"`
+}
+
+type BothInstallerConfigTemplateResource struct {
+	// Spec is the specification of the desired behavior of the installer config.
+	Spec BothInstallerConfigSpec `json:"spec"`
 }
 
 func init() {

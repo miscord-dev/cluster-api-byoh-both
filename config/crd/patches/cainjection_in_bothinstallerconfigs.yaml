@@ -4,4 +4,4 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     cert-manager.io/inject-ca-from: $(CERTIFICATE_NAMESPACE)/$(CERTIFICATE_NAME)
-  name: bothinstallerconfigs.byoh.miscord.win
+  name: bothinstallerconfigs.infrastructure.cluster.x-k8s.io
