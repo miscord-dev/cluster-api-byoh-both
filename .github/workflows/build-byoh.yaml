@@ -1,4 +1,4 @@
-name: Build images
+name: Build BYOH
 
 on:
   pull_request:
@@ -21,6 +21,6 @@ jobs:
           FORCE_COLOR: 3
         run: |
           npx zx <<'EOF'
-          const script = require('.github/workflows/build-byoh.js')
+          const script = require('./.github/workflows/build-byoh.js')
           console.log(script())
           EOF
