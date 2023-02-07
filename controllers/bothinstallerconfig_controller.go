@@ -157,7 +157,7 @@ func (r *BothInstallerConfigReconciler) Reconcile(ctx context.Context, req ctrl.
 		return ctrl.Result{}, nil
 	}
 
-	return ctrl.Result{}, nil
+	return r.reconcileNormal(ctx, scope)
 }
 
 func (r *BothInstallerConfigReconciler) reconcileNormal(ctx context.Context, scope *bothInstallerConfigScope) (reconcile.Result, error) {
