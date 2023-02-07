@@ -216,7 +216,7 @@ func (r *BothInstallerConfigReconciler) storeInstallationData(ctx context.Contex
 					Kind:       scope.Config.Kind,
 					Name:       scope.Config.Name,
 					UID:        scope.Config.UID,
-					Controller: pointer.BoolPtr(true),
+					Controller: pointer.Bool(true),
 				},
 			},
 		},
