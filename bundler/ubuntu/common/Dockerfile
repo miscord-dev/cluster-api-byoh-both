@@ -29,7 +29,6 @@ RUN /bundle-builder/download.sh
 FROM $BASE_IMAGE as bundler
 
 ARG INGREDIENTS_PATH
-ARG 
 
 WORKDIR /bundler
 
