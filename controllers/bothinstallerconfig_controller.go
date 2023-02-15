@@ -169,7 +169,7 @@ func (r *BothInstallerConfigReconciler) reconcileNormal(ctx context.Context, sco
 
 	installTemplate := stringWithDefault(configSpec.InstallTemplate, byohmiscordwinv1alpha1.DefaultInstallTemplate)
 	uninstallTemplate := stringWithDefault(configSpec.UninstallTemplate, byohmiscordwinv1alpha1.DefaultUninstallTemplate)
-	repo := stringWithDefault(configSpec.TagTemplate, "")
+	repo := stringWithDefault(configSpec.Repository, "")
 	tagTemplate := stringWithDefault(configSpec.TagTemplate, byohmiscordwinv1alpha1.DefaultTagTemplate)
 
 	install, uninstall, err := r.Installer.Generate(installer.InstallerConfig{
