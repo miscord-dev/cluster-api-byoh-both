@@ -17,6 +17,8 @@ docker buildx build \
     --build-arg KUBERNETES_CNI_VERSION=$KUBERNETES_CNI_VERSION \
     --build-arg KUBERNETES_CRI_VERSION=$KUBERNETES_CRI_VERSION \
     -t intermediate:$$ "$1"
+docker images
+
 docker run -v $(pwd)/tmp:/host --rm intermediate:$$ bash -c "cp -r /bundler/* /host/"
 
 imgpkg push -i ghcr.io/miscord-dev/byoh-both-bundle:$2 -f ./tmp
