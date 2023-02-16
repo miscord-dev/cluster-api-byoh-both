@@ -36,7 +36,9 @@ jobs:
         uses: docker/setup-buildx-action@v2
         with:
           platforms: linux/${{ matrix.oss.arch }}
-      - run: |
+      - env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
           export IMGPKG_ACTIVE_KEYCHAINS=github
           curl -L https://carvel.dev/install.sh | K14SIO_INSTALL_BIN_DIR=/usr/local/bin bash
 
