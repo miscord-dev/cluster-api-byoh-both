@@ -38,6 +38,7 @@ jobs:
           platforms: linux/${{ matrix.oss.arch }}
       - run: |
           export IMGPKG_ACTIVE_KEYCHAINS=github
+          curl -L https://carvel.dev/install.sh | K14SIO_INSTALL_BIN_DIR=/usr/local/bin bash
 
           cd bundler
           export KUBERNETES_VERSION=${{ matrix.versions.k8s-version }}
