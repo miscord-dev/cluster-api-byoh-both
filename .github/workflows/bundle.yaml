@@ -3,8 +3,6 @@ name: Bundle artifacts
 on:
   push:
     branches: [main]
-    tags:
-      - "v*.*.*"
   pull_request:
 
 jobs:
@@ -18,10 +16,10 @@ jobs:
           cni-version: 1.2.0
           cri-version: 1.26.0
         oss:
-        - tag: $KUBERNETES_VERSION-ubuntu-amd64
+        - tag: $KUBERNETES_VERSION-ubuntu-$ARCH
           arch: amd64
           dir: ubuntu/common
-        - tag: $KUBERNETES_VERSION-ubuntu-arm64
+        - tag: $KUBERNETES_VERSION-ubuntu-$ARCH
           arch: arm64
           dir: ubuntu/common
     steps:
@@ -49,7 +47,11 @@ jobs:
           export KUBERNETES_CRI_VERSION=${{ matrix.versions.cri-version }}
           export ARCH=${{ matrix.oss.arch }}
           
-          export TAG=${{ matrix.oss.tag }}
+          TAG=${{ matrix.oss.tag }}
           echo $TAG
+
+          if ${{ github.event_name == 'pull_request' }}; then
+            TAG+="-pr-${{ github.event.pull_request.number }}"
+          fi
 
           ./bundler.sh "${{ matrix.oss.dir }}" "$TAG"
