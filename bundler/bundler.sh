@@ -10,6 +10,7 @@ mkdir -p tmp
 ARCH=${ARCH:-amd64}
 
 docker buildx build \
+    --load \
     --platform=linux/$ARCH \
     --build-arg ARCH=$ARCH \
     --build-arg KUBERNETES_VERSION=$KUBERNETES_VERSION \
@@ -17,7 +18,6 @@ docker buildx build \
     --build-arg KUBERNETES_CNI_VERSION=$KUBERNETES_CNI_VERSION \
     --build-arg KUBERNETES_CRI_VERSION=$KUBERNETES_CRI_VERSION \
     -t intermediate:$$ "$1"
-docker images
 
 docker run -v $(pwd)/tmp:/host --rm intermediate:$$ bash -c "cp -r /bundler/* /host/"
 
