@@ -2,8 +2,8 @@
 # since it depends on service name and namespace that are out of this kustomize package.
 # It should be run by config/default
 resources:
-- bases/byoh.miscord.win_bothinstallerconfigtemplates.yaml
-- bases/byoh.miscord.win_bothinstallerconfigs.yaml
+- bases/infrastructure.cluster.x-k8s.io_bothinstallerconfigtemplates.yaml
+- bases/infrastructure.cluster.x-k8s.io_bothinstallerconfigs.yaml
 #+kubebuilder:scaffold:crdkustomizeresource
 
 patchesStrategicMerge:

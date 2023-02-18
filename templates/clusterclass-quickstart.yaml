@@ -1,0 +1,200 @@
+---
+apiVersion: cluster.x-k8s.io/v1beta1
+kind: ClusterClass
+metadata:
+  name: quickstart
+spec:
+  controlPlane:
+    ref:
+      apiVersion: controlplane.cluster.x-k8s.io/v1beta1
+      kind: KubeadmControlPlaneTemplate
+      name: quickstart-control-plane
+    machineInfrastructure:
+      ref:
+        kind: ByoMachineTemplate
+        apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+        name: quickstart-control-plane-machine
+  infrastructure:
+    ref:
+      apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+      kind: ByoClusterTemplate
+      name: quickstart-cluster
+  workers:
+    machineDeployments:
+      - class: quickstart-worker
+        template:
+          bootstrap:
+            ref:
+              apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
+              kind: KubeadmConfigTemplate
+              name: quickstart-worker-bootstrap-template
+          infrastructure:
+            ref:
+              apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+              kind: ByoMachineTemplate
+              name: quickstart-worker-machinetemplate
+  variables:
+    - name: apiServerCertSANs
+      required: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            goriras:
+              type: array
+              items:
+                type: object
+          default:
+            - localhost
+            - 127.0.0.1
+            - 0.0.0.0
+            - host.docker.internal
+    - name: controlPlaneIpAddr
+      required: true
+      schema:
+        openAPIV3Schema:
+          type: string
+    - name: kubeVipPodManifest
+      required: true
+      schema:
+        openAPIV3Schema:
+          description: kube-vip manifest for the control plane.
+          type: string
+  patches:
+    - name: apiServerCertSANs
+      description: "Sets the certSANs for kube-apiserver."
+      definitions:
+        - selector:
+            apiVersion: controlplane.cluster.x-k8s.io/v1beta1
+            kind: KubeadmControlPlaneTemplate
+            matchResources:
+              controlPlane: true
+          jsonPatches:
+            - op: add
+              path: "/spec/template/spec/kubeadmConfigSpec/clusterConfiguration/apiServer/certSANs"
+              valueFrom:
+                variable: apiServerCertSANs
+    - name: controlPlaneEndpoint
+      description: "Sets control plane endpoint"
+      definitions:
+        - selector:
+            apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+            kind: ByoClusterTemplate
+            matchResources:
+              infrastructureCluster: true
+          jsonPatches:
+            - op: add
+              path: "/spec/template/spec/controlPlaneEndpoint"
+              valueFrom:
+                template: |
+                  host: '{{ .controlPlaneIpAddr }}'
+                  port: 6443
+    - name: kubeVipEnabled
+      definitions:
+        - jsonPatches:
+            - op: add
+              path: /spec/template/spec/kubeadmConfigSpec/files/0/content
+              valueFrom:
+                variable: kubeVipPodManifest
+          selector:
+            apiVersion: controlplane.cluster.x-k8s.io/v1beta1
+            kind: KubeadmControlPlaneTemplate
+            matchResources:
+              controlPlane: true
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+kind: ByoClusterTemplate
+metadata:
+  name: quickstart-cluster
+spec:
+  template:
+    spec: {}
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+kind: ByoMachineTemplate
+metadata:
+  name: quickstart-control-plane-machine
+spec:
+  template:
+    spec:
+      installerRef:
+        apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+        kind: BothInstallerConfigTemplate
+        name: ${CLUSTER_NAME}-control-plane
+        namespace: ${NAMESPACE}
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+kind: ByoMachineTemplate
+metadata:
+  name: quickstart-worker-machinetemplate
+spec:
+  template:
+    spec:
+      installerRef:
+        apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+        kind: BothInstallerConfigTemplate
+        name: ${CLUSTER_NAME}-md-0
+        namespace: ${NAMESPACE}
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+kind: BothInstallerConfigTemplate
+metadata:
+  name: ${CLUSTER_NAME}-control-plane
+spec:
+  template:
+    spec:
+      repository: ghcr.io/miscord-dev/byoh-both-bundle
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+kind: BothInstallerConfigTemplate
+metadata:
+  name: ${CLUSTER_NAME}-md-0
+spec:
+  template:
+    spec:
+      repository: ghcr.io/miscord-dev/byoh-both-bundle
+---
+kind: KubeadmControlPlaneTemplate
+apiVersion: controlplane.cluster.x-k8s.io/v1beta1
+metadata:
+  name: quickstart-control-plane
+spec:
+  template:
+    spec:
+      kubeadmConfigSpec:
+        clusterConfiguration:
+          apiServer:
+            certSANs:
+              - localhost
+              - 127.0.0.1
+              - 0.0.0.0
+              - host.docker.internal
+          controllerManager:
+            extraArgs:
+              enable-hostpath-provisioner: "true"
+        files:
+          - owner: root:root
+            path: /etc/kubernetes/manifests/kube-vip.yaml
+        initConfiguration:
+          nodeRegistration:
+            criSocket: /var/run/containerd/containerd.sock
+            ignorePreflightErrors:
+            - Swap
+            - DirAvailable--etc-kubernetes-manifests
+            - FileAvailable--etc-kubernetes-kubelet.conf
+        joinConfiguration:
+          nodeRegistration:
+            criSocket: /var/run/containerd/containerd.sock
+            ignorePreflightErrors:
+            - Swap
+            - DirAvailable--etc-kubernetes-manifests
+            - FileAvailable--etc-kubernetes-kubelet.conf
+---
+apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
+kind: KubeadmConfigTemplate
+metadata:
+  name: quickstart-worker-bootstrap-template
+spec:
+  template:
+    spec: {}
+---

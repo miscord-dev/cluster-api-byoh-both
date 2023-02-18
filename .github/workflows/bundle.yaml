@@ -1,0 +1,57 @@
+name: Bundle artifacts
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  imgpkg:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        versions:
+        - k8s-version: 1.24.2
+          containerd-version: 1.6.8
+          cni-version: 1.2.0
+          cri-version: 1.26.0
+        oss:
+        - tag: $KUBERNETES_VERSION-ubuntu-$ARCH
+          arch: amd64
+          dir: ubuntu/common
+        - tag: $KUBERNETES_VERSION-ubuntu-$ARCH
+          arch: arm64
+          dir: ubuntu/common
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+        with:
+          platforms: linux/${{ matrix.oss.arch }}
+      - env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          export IMGPKG_ACTIVE_KEYCHAINS=github
+          curl -L https://carvel.dev/install.sh | K14SIO_INSTALL_BIN_DIR=/usr/local/bin bash
+
+          cd bundler
+          export KUBERNETES_VERSION=${{ matrix.versions.k8s-version }}
+          export CONTAINERD_VERSION=${{ matrix.versions.containerd-version }}
+          export KUBERNETES_CNI_VERSION=${{ matrix.versions.cni-version }}
+          export KUBERNETES_CRI_VERSION=${{ matrix.versions.cri-version }}
+          export ARCH=${{ matrix.oss.arch }}
+          
+          TAG=${{ matrix.oss.tag }}
+          echo $TAG
+
+          if ${{ github.event_name == 'pull_request' }}; then
+            TAG+="-pr-${{ github.event.pull_request.number }}"
+          fi
+
+          ./bundler.sh "${{ matrix.oss.dir }}" "$TAG"

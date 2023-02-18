@@ -2,7 +2,7 @@
 # This file is used to track the info used to scaffold your project
 # and allow the plugins properly work.
 # More info: https://book.kubebuilder.io/reference/project-config.html
-domain: byoh.miscord.win
+domain: infrastructure.cluster.x-k8s.io
 layout:
 - go.kubebuilder.io/v3
 projectName: cluster-api-byoh-both
@@ -11,7 +11,7 @@ resources:
 - api:
     crdVersion: v1
     namespaced: true
-  domain: byoh.miscord.win
+  domain: infrastructure.cluster.x-k8s.io
   kind: BothInstallerConfigTemplate
   path: github.com/miscord-dev/cluster-api-byoh-both/api/v1alpha1
   version: v1alpha1
@@ -19,7 +19,7 @@ resources:
     crdVersion: v1
     namespaced: true
   controller: true
-  domain: byoh.miscord.win
+  domain: infrastructure.cluster.x-k8s.io
   kind: BothInstallerConfig
   path: github.com/miscord-dev/cluster-api-byoh-both/api/v1alpha1
   version: v1alpha1
