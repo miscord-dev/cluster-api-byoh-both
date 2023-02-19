@@ -51,10 +51,6 @@ spec:
                         type: string
                       uninstallTemplate:
                         type: string
-                    required:
-                    - installTemplate
-                    - repository
-                    - uninstallTemplate
                     type: object
                 required:
                 - spec
