@@ -44,10 +44,6 @@ spec:
                 type: string
               uninstallTemplate:
                 type: string
-            required:
-            - installTemplate
-            - repository
-            - uninstallTemplate
             type: object
           status:
             description: BothInstallerConfigStatus defines the observed state of BothInstallerConfig

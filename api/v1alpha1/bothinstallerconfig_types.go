@@ -29,9 +29,9 @@ type BothInstallerConfigSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	InstallTemplate   *string `json:"installTemplate"`
-	UninstallTemplate *string `json:"uninstallTemplate"`
-	Repository        *string `json:"repository"`
+	InstallTemplate   *string `json:"installTemplate,omitempty"`
+	UninstallTemplate *string `json:"uninstallTemplate,omitempty"`
+	Repository        *string `json:"repository,omitempty"`
 	TagTemplate       *string `json:"tagNameTemplate,omitempty"`
 }
 
