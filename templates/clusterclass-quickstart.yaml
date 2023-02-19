@@ -38,12 +38,9 @@ spec:
       required: true
       schema:
         openAPIV3Schema:
-          type: object
-          properties:
-            goriras:
-              type: array
-              items:
-                type: object
+          type: array
+          items:
+            type: string
           default:
             - localhost
             - 127.0.0.1
